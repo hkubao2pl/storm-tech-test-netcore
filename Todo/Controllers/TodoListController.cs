@@ -38,6 +38,16 @@ namespace Todo.Controllers
             return View(viewmodel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Detail(int todoListId, bool hideDone = false)
+        {
+            var todoList = dbContext.SingleTodoList(todoListId);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, hideDone);
+            return View(viewmodel);
+        }
+
+
         [HttpGet]
         public IActionResult Create()
         {

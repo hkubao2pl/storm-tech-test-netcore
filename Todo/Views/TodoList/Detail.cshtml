@@ -4,66 +4,81 @@
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @{
-    ViewData["Title"] = $"List: {Model.Title}";
+	ViewData["Title"] = $"List: {Model.Title}";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
 
-    <ul class="list-group">
+	<ul class="list-group">
 
-        <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
-                <strong>Add New Item</strong>
-            </a>
-        </li>
+		<li class="list-group-item">
+			<a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
+				<strong>Add New Item</strong>
+			</a>
+		</li>
 
-        @foreach (var item in Model.Items.OrderBy(i => i.Importance))
-        {
-            string contextualClass;
-            switch (item.Importance)
-            {
-                case Importance.High:
-                    contextualClass = "list-group-item-danger";
-                    break;
-                case Importance.Low:
-                    contextualClass = "list-group-item-info";
-                    break;
-                default:
-                    contextualClass = "";
-                    break;
-            }
+		@foreach (var item in Model.Items.OrderBy(i => i.Importance))
+		{
+			string contextualClass;
+			switch (item.Importance)
+			{
+				case Importance.High:
+					contextualClass = "list-group-item-danger";
+					break;
+				case Importance.Low:
+					contextualClass = "list-group-item-info";
+					break;
+				default:
+					contextualClass = "";
+					break;
+			}
 
-            <li class="list-group-item @contextualClass">
-                
-                <div class="row">
+			<li class="list-group-item @contextualClass">
 
-                <div class="col-md-8">
-                    <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
+				<div class="row">
 
-                        @if (item.IsDone)
-                        {
-                            <s>@item.Title</s>
-                        }
-                        else
-                        {
-                            <text>@item.Title</text>
-                        }
-                    </a>
-                </div>
+					<div class="col-md-8">
+						<a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
 
-                <div class="col-md-4 text-right">
-                    <small>
-                        @item.ResponsibleParty.UserName
+							@if (item.IsDone)
+							{
+								<s>@item.Title</s>
+							}
+							else
+							{
+								<text>@item.Title</text>
+							}
+						</a>
+					</div>
 
-                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+					<div class="col-md-4 text-right">
+						<small>
+							@item.ResponsibleParty.UserName
 
-                    </small>
-                </div>
-                </div>
+							<img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30" />
 
-            </li>
-        }
-    </ul>
+						</small>
+					</div>
+				</div>
+
+			</li>
+		}
+		<li class="list-group-item">
+			<div class="row">
+				<form method="post">
+					@Html.AntiForgeryToken()
+					@Html.HiddenFor(m =>@Model.TodoListId)
+					<div class="col-md-12">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" asp-for="HideDone" onchange="this.form.submit()" name="hideDone" value="true"/> Hide done items
+							</label>
+						</div>
+					</div>
+				</form>
+			</div>
+		</li>
+	</ul>
 </div>
