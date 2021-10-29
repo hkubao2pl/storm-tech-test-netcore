@@ -15,9 +15,15 @@ namespace Todo.Views.TodoItem
             new SelectListItem {Text = "Low", Value = Importance.Low.ToString()},
         };
 
+        public static readonly SelectListItem[] OrderSelectListItems =
+        {
+            new SelectListItem {Text = "Ascending", Value = Order.Ascending.ToString()},
+            new SelectListItem {Text = "Descending", Value = Order.Descending.ToString()},
+        };
+
         public static List<SelectListItem> UserSelectListItems(this ApplicationDbContext dbContext)
         {
-            return dbContext.Users.Select(u => new SelectListItem {Text = u.UserName, Value = u.Id}).ToList();
+            return dbContext.Users.Select(u => new SelectListItem { Text = u.UserName, Value = u.Id }).ToList();
         }
     }
 }

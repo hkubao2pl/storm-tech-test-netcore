@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Todo.Data.Entities;
 
 namespace Todo.Models.TodoItems
@@ -15,9 +16,12 @@ namespace Todo.Models.TodoItems
         public string ResponsiblePartyId { get; set; }
         public Importance Importance { get; set; }
 
+        [Range(0, 10, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+        public int Rank { get; set; }
+
         public TodoItemEditFields() { }
 
-        public TodoItemEditFields(int todoListId, string todoListTitle, int todoItemId, string title, bool isDone, string responsiblePartyId, Importance importance)
+        public TodoItemEditFields(int todoListId, string todoListTitle, int todoItemId, string title, bool isDone, string responsiblePartyId, Importance importance, int rank)
         {
             TodoListId = todoListId;
             TodoListTitle = todoListTitle;
@@ -26,6 +30,7 @@ namespace Todo.Models.TodoItems
             IsDone = isDone;
             ResponsiblePartyId = responsiblePartyId;
             Importance = importance;
+            Rank = rank;
         }
     }
 }

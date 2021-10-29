@@ -40,10 +40,10 @@ namespace Todo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Detail(int todoListId, bool hideDone = false)
+        public IActionResult Detail(int todoListId, bool hideDone = false, bool importanceOrder = false, Order rankOrder = Order.Descending)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, hideDone);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, hideDone, importanceOrder, rankOrder);
             return View(viewmodel);
         }
 
@@ -67,7 +67,7 @@ namespace Todo.Controllers
             await dbContext.AddAsync(todoList);
             await dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Create", "TodoItem", new {todoList.TodoListId});
+            return RedirectToAction("Create", "TodoItem", new { todoList.TodoListId });
         }
     }
 }
