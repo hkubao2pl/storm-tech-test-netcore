@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 using Todo.Models.TodoItems;
+using Todo.Services;
 
 namespace Todo.EntityModelMappers.TodoItems
 {
     public class UserSummaryViewmodelFactory
     {
-        public static UserSummaryViewmodel Create(IdentityUser identityUser)
+        public static async Task<UserSummaryViewmodel> CreateAsync(IdentityUser identityUser)
         {
-            return new UserSummaryViewmodel(identityUser.UserName, identityUser.Email);
+            string userName = await Gravatar.GetUserName(identityUser.Email) + " " + identityUser.Email;
+            return new UserSummaryViewmodel(userName, identityUser.Email);
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Todo.Data.Entities;
 using Todo.EntityModelMappers.TodoItems;
+using Todo.Models.TodoItems;
 using Todo.Models.TodoLists;
 
 namespace Todo.EntityModelMappers.TodoLists
 {
     public static class TodoListDetailViewmodelFactory
     {
-        public static TodoListDetailViewmodel Create(TodoList todoList, bool hideDone = false, bool importanceOrder = true, Order rankOrder = Order.Descending)
+        public static async Task<TodoListDetailViewmodel> CreateAsync(TodoList todoList, bool hideDone = false, bool importanceOrder = true, Order rankOrder = Order.Descending)
         {
             IEnumerable<TodoItem> items = todoList.Items;
             if (hideDone)
@@ -24,12 +26,16 @@ namespace Todo.EntityModelMappers.TodoLists
                     items = items.OrderByDescending(i => i.Rank);
                     break;
             }
-            if(importanceOrder)
+            if (importanceOrder)
             {
                 items = items.OrderBy(i => i.Importance);
             }
-
-            return new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, hideDone, importanceOrder, rankOrder, items.Select(TodoItemSummaryViewmodelFactory.Create).ToList());
+            List<TodoItemSummaryViewmodel> result = new List<TodoItemSummaryViewmodel>();
+            foreach (var item in items)
+            {
+                result.Add(await TodoItemSummaryViewmodelFactory.CreateAsync(item));
+            }
+            return new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, hideDone, importanceOrder, rankOrder, result);
         }
     }
 }

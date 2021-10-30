@@ -23,27 +23,27 @@ namespace Todo.Controllers
             this.userStore = userStore;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userId = User.Id();
             var todoLists = dbContext.RelevantTodoLists(userId);
-            var viewmodel = TodoListIndexViewmodelFactory.Create(todoLists);
+            var viewmodel = await TodoListIndexViewmodelFactory.CreateAsync(todoLists);
             return View(viewmodel);
         }
 
-        public IActionResult Detail(int todoListId)
+        public async Task<IActionResult> Detail(int todoListId)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList);
+            var viewmodel = await TodoListDetailViewmodelFactory.CreateAsync(todoList);
             return View(viewmodel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Detail(int todoListId, bool hideDone = false, bool importanceOrder = false, Order rankOrder = Order.Descending)
+        public async Task<IActionResult> Detail(int todoListId, bool hideDone = false, bool importanceOrder = false, Order rankOrder = Order.Descending)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, hideDone, importanceOrder, rankOrder);
+            var viewmodel = await TodoListDetailViewmodelFactory.CreateAsync(todoList, hideDone, importanceOrder, rankOrder);
             return View(viewmodel);
         }
 
