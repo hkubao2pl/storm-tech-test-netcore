@@ -8,11 +8,11 @@ namespace Todo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RankController : ControllerBase
+    public class RankApiController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
 
-        public RankController(ApplicationDbContext dbContext)
+        public RankApiController(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -20,14 +20,14 @@ namespace Todo.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(RankDTO rank)
         {
-            if (rank?.Rank < 0 || rank.Rank > 10)
+            if (!ModelState.IsValid || rank?.Rank < 0 || rank.Rank > 10)
             {
-                return BadRequest("Rank value has to be between 0 and 10");
+                return BadRequest("Invalid model state!");
             }
             var todoItem = dbContext.SingleTodoItem(rank.TodoItemId);
             if (todoItem == null)
             {
-                return BadRequest(@"TodoItemId {rank.TodoItemId} does not exist!");
+                return NotFound();
             }
             todoItem.Rank = rank.Rank;
             await dbContext.SaveChangesAsync();
