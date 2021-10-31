@@ -8,6 +8,7 @@ using Todo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 
 namespace Todo
 {
@@ -38,6 +39,11 @@ namespace Todo
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllers();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
 
             services.AddAuthorization(options =>
             {
